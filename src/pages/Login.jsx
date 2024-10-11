@@ -1,17 +1,45 @@
-import { Form, Input, Button, Card } from "antd";
-import { Link, useNavigate } from "react-router-dom"; // Import useNavigate for redirection
+import { Form, Input, Button, Card, message } from "antd";
+import { Link, useNavigate } from "react-router-dom";
 
 const Login = () => {
-  const navigate = useNavigate(); // Initialize useNavigate
+  const navigate = useNavigate();
 
   const onFinish = (values) => {
-    console.log("Success:", values);
-    // Save username and password to local storage
-    localStorage.setItem("username", values.username);
-    localStorage.setItem("password", values.password); // Consider hashing this in a real app
+    const { username, password } = values;
 
-    // Optionally, redirect to the dashboard
-    navigate("/dashboard"); // Redirect to the dashboard after login
+    // Check if username and password are not empty
+    if (!username) {
+      message.error("Iltimos, foydalanuvchi nomini kiriting!");
+      return;
+    }
+    if (!password) {
+      message.error("Iltimos, parolni kiriting!");
+      return;
+    }
+    // Check if password contains at least one digit
+    if (!/\d/.test(password)) {
+      message.error("Parolda kamida bir raqam bo'lishi kerak!");
+      return;
+    }
+
+    // Retrieve stored credentials from local storage
+    const storedUsername = localStorage.getItem("username");
+    const storedPassword = localStorage.getItem("password");
+
+    // Ensure local storage contains the correct values
+    if (storedUsername === null || storedPassword === null) {
+      message.error("Ro'yxatdan o'tmagan foydalanuvchi.");
+      return;
+    }
+
+    // Check if entered credentials match the stored ones
+    if (username === storedUsername && password === storedPassword) {
+      console.log("Login successful");
+      message.success("Kirish muvaffaqiyatli!"); // Show success message
+      navigate("/navbar"); // Redirect to the navbar page on successful login
+    } else {
+      message.error("Foydalanuvchi nomi yoki parol noto'g'ri!"); // Show error message
+    }
   };
 
   const onFinishFailed = (errorInfo) => {
