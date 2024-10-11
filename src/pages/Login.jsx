@@ -1,9 +1,17 @@
 import { Form, Input, Button, Card } from "antd";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom"; // Import useNavigate for redirection
 
 const Login = () => {
+  const navigate = useNavigate(); // Initialize useNavigate
+
   const onFinish = (values) => {
     console.log("Success:", values);
+    // Save username and password to local storage
+    localStorage.setItem("username", values.username);
+    localStorage.setItem("password", values.password); // Consider hashing this in a real app
+
+    // Optionally, redirect to the dashboard
+    navigate("/dashboard"); // Redirect to the dashboard after login
   };
 
   const onFinishFailed = (errorInfo) => {
