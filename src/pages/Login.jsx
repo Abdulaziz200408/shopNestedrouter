@@ -7,7 +7,6 @@ const Login = () => {
   const onFinish = (values) => {
     const { username, password } = values;
 
-    // Check if username and password are not empty
     if (!username) {
       message.error("Iltimos, foydalanuvchi nomini kiriting!");
       return;
@@ -16,29 +15,25 @@ const Login = () => {
       message.error("Iltimos, parolni kiriting!");
       return;
     }
-    // Check if password contains at least one digit
     if (!/\d/.test(password)) {
       message.error("Parolda kamida bir raqam bo'lishi kerak!");
       return;
     }
 
-    // Retrieve stored credentials from local storage
     const storedUsername = localStorage.getItem("username");
     const storedPassword = localStorage.getItem("password");
 
-    // Ensure local storage contains the correct values
     if (storedUsername === null || storedPassword === null) {
       message.error("Ro'yxatdan o'tmagan foydalanuvchi.");
       return;
     }
 
-    // Check if entered credentials match the stored ones
     if (username === storedUsername && password === storedPassword) {
       console.log("Login successful");
-      message.success("Kirish muvaffaqiyatli!"); // Show success message
-      navigate("/navbar"); // Redirect to the navbar page on successful login
+      message.success("Kirish muvaffaqiyatli!");
+      navigate("/navbar");
     } else {
-      message.error("Foydalanuvchi nomi yoki parol noto'g'ri!"); // Show error message
+      message.error("Foydalanuvchi nomi yoki parol noto'g'ri!");
     }
   };
 

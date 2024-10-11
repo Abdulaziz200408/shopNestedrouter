@@ -1,12 +1,13 @@
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 
 const Dashboard = () => {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
-  const productsPerPage = 5; // Sahifada ko'rsatiladigan mahsulotlar soni
+  const productsPerPage = 5;
+  const navigate = useNavigate();
 
   useEffect(() => {
     axios
@@ -15,10 +16,9 @@ const Dashboard = () => {
         setProducts(response.data);
         setLoading(false);
       })
-      .catch((error) => console.error("Xatolik: ", error));
+      .catch((error) => console.error("Error: ", error));
   }, []);
 
-  // Sahifadagi mahsulotlarni olish
   const indexOfLastProduct = currentPage * productsPerPage;
   const indexOfFirstProduct = indexOfLastProduct - productsPerPage;
   const currentProducts = products.slice(
@@ -26,11 +26,25 @@ const Dashboard = () => {
     indexOfLastProduct
   );
 
-  // Sahifalash funksiyalari
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
+
+  const handleLogout = () => {
+    localStorage.removeItem("username");
+    localStorage.removeItem("password");
+    navigate("/login");
+    window.location.reload();
+  };
 
   return (
     <div className="container mx-auto my-10">
+      <div className="flex justify-end mb-4">
+        <button
+          onClick={handleLogout}
+          className="bg-red-500 text-white py-2 px-4 rounded hover:bg-red-600 transition duration-300"
+        >
+          Logout
+        </button>
+      </div>
       {loading ? (
         <p className="text-center text-xl font-semibold">Yuklanmoqda...</p>
       ) : (
@@ -80,7 +94,6 @@ const Dashboard = () => {
             </tbody>
           </table>
 
-          {/* Sahifalash */}
           <div className="mt-4 flex justify-center">
             {Array.from(
               { length: Math.ceil(products.length / productsPerPage) },
